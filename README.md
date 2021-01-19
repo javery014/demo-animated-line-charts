@@ -1,4 +1,4 @@
-# Animated Line Graphs Demo
+# Animated Line Charts Demo
 
 This repository holds a series of tags which represents the different stages working our way up to an animated line graph using react, react-spring, and svg.
 
