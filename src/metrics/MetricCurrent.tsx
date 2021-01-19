@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createUseStyles } from 'react-jss';
+import { useSpring, animated } from 'react-spring';
 import Tag from '../components/Tag';
 import triangle from '../assets/triangle.svg';
 import { IMetricChartData } from '../types';;
@@ -7,6 +8,8 @@ import { IMetricChartData } from '../types';;
 type IMetricProps = {
   label: string;
   dataPoints: IMetricChartData;
+  timing: number;
+  playAnimation: boolean;
 }
 
 const useStyles = createUseStyles({
@@ -69,9 +72,20 @@ function formatValue(label: string, value: number): string {
   }
 }
 
-const MetricCurrent: React.FunctionComponent<IMetricProps> = ({ label, dataPoints }) => {
+const MetricCurrent: React.FunctionComponent<IMetricProps> = ({ label, dataPoints, timing, playAnimation }) => {
   const styles = useStyles();
-  const max = Math.max(...dataPoints.map((m) => m.value));
+  const current = Math.max(...dataPoints.map(dataPoint => dataPoint.value));
+  const spring = useSpring(() => ({
+    config: { duration: timing },
+    current: 0,
+    from: { current: 0 }
+  }));
+
+  useEffect(() => {
+    if (playAnimation) {
+      spring[1]({ current });
+    }
+  }, [playAnimation, spring, current]);
 
   return (
     <div className={styles.container}>
@@ -79,7 +93,9 @@ const MetricCurrent: React.FunctionComponent<IMetricProps> = ({ label, dataPoint
       <div className={styles.valueContainer}>
         <img src={triangle} alt="" />
         <span className={styles.value}>
-          {formatValue(label, max)}
+          <animated.span className={styles.value}>
+            {spring[0].current.interpolate((x) => formatValue(label, x))}
+          </animated.span>
         </span>
       </div>
     </div>

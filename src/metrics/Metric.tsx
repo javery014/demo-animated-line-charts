@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { createUseStyles } from 'react-jss';
 import { FixedAspectRatioContainer, FixedAspectRatioElement } from '../components/FixedAspectRatioElement';
 import MetricCurrent from './MetricCurrent';
@@ -45,15 +45,20 @@ const useStyles = createUseStyles({
 const Metric: React.FunctionComponent<IMetricProps> = ({ label, dataPoints, lineColor }) => {
   const styles = useStyles();
   const metricRef = useRef(null);
+  const TIMING = 2000;
+  const [playAnimation, setPlayAnimation] = useState<boolean>(false);
 
   return (
     <div ref={metricRef} className={styles.root}>
       <FixedAspectRatioContainer ratio="57%">
         <FixedAspectRatioElement el="div" className={styles.inner}>
-          <MetricCurrent label={label} dataPoints={dataPoints} />
+          <MetricCurrent label={label} dataPoints={dataPoints} timing={TIMING} playAnimation={playAnimation} />
           <MetricChart
             dataPoints={dataPoints}
             lineColor={lineColor}
+            timing={TIMING}
+            playAnimation={playAnimation}
+            setPlayAnimation={setPlayAnimation}
           />
         </FixedAspectRatioElement>
       </FixedAspectRatioContainer>

@@ -8,6 +8,10 @@ export type IMetricChartDataPoint = {
   value: number;
 }
 
+export type ISetPlayAnimation = {
+  (play: boolean): void;
+}
+
 export type IMetricOppositeLine = {
   length: number;
   angle: number;
