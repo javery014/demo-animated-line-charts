@@ -94,7 +94,6 @@ function mapDataToSvgCoordinates(dataPoints: IMetricChartData): IMetricMappedDat
     // from the max value of the SVG grid y axis
     const mappedY = GRID_AXIS_Y[1] - invertedMappedY;
 
-
     return { x: mappedX, y: mappedY };
   });
 }
