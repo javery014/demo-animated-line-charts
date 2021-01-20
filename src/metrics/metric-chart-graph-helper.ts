@@ -88,7 +88,7 @@ function mapDataToSvgCoordinates(dataPoints: IMetricChartData): IMetricMappedDat
     // the positive Y direction goes DOWNWARD in the SVG coordinate system,
     // which means this is an inverted y value of what needs to be shown
     // in the SVG grid
-    const invertedMappedY = (dataPoint.value - yMin) * yScaleFactor;
+    const invertedMappedY = dataPoint.value * yScaleFactor;
 
     // Get the correct mapped Y value by subtracting the invertedYValue
     // from the max value of the SVG grid y axis
