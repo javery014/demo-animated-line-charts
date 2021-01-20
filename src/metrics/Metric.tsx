@@ -45,6 +45,7 @@ const useStyles = createUseStyles({
 const Metric: React.FunctionComponent<IMetricProps> = ({ label, dataPoints, lineColor }) => {
   const styles = useStyles();
   const metricRef = useRef(null);
+  dataPoints.sort((m1, m2) => m1.time - m2.time);
 
   return (
     <div ref={metricRef} className={styles.root}>
