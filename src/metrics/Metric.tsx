@@ -47,6 +47,7 @@ const Metric: React.FunctionComponent<IMetricProps> = ({ label, dataPoints, line
   const metricRef = useRef(null);
   const TIMING = 2000;
   const [playAnimation, setPlayAnimation] = useState<boolean>(false);
+  dataPoints.sort((m1, m2) => m1.time - m2.time);
 
   return (
     <div ref={metricRef} className={styles.root}>
