@@ -9,12 +9,13 @@ const useStyles = createUseStyles({
     margin: '5rem auto 0',
     display: 'flex',
     flexWrap: 'wrap',
-    ['@media(min-width: 550px)']: {
-      justifyContent: 'space-around'
-    },
-    ['@media(min-width: 920px)']: {
-      justifyContent: 'space-between'
-    }
+    justifyContent: 'space-between'
+    // ['@media(min-width: 550px)']: {
+    //   justifyContent: 'space-around'
+    // },
+    // ['@media(min-width: 920px)']: {
+    //   justifyContent: 'space-between'
+    // }
   }
 });
 

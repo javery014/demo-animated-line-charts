@@ -42,7 +42,6 @@ function getAxisLength(axis: number[]): number {
  * @returns {string} text label to display when x=0
  */
 function getXAxisStartLabel(dataPoints: IMetricChartData): string {
-  dataPoints = dataPoints.sort((m1, m2) => m1.time - m2.time);
   const xValues = dataPoints.map(m => m.time);
   const dateStart = new Date(Math.min(...xValues) * 1000);
   return `${SHORT_MONTHS[dateStart.getMonth()]} ${dateStart.getFullYear()}`;
@@ -58,18 +57,19 @@ function getXAxisStartLabel(dataPoints: IMetricChartData): string {
  * @returns {IMetricMappedDataPoint[]}
  */
 function mapDataToSvgCoordinates(dataPoints: IMetricChartData): IMetricMappedDataPoint[] {
-  // For x and y, get the values to be used as datapoints
-  const xValues = dataPoints.map((m) => m.time);
-  const yValues = dataPoints.map((m) => m.value);
+  // We want the max x value to be the time value of the last data point
+  const xMax = dataPoints[dataPoints.length - 1].time;
 
-  // Min/max values from the API data which will be used
-  // as the foundation for determining the mapped SVG coordinates
-  const xMax = Math.max(...xValues);
-  const xMin = Math.min(...xValues);
-  const yMax = Math.max(...yValues);
+  // We want the time value of the first data point to be x=0 in the SVG
+  const xMin = dataPoints[0].time
+
+  // We want the max y value to be the "value" value of the last dataPoint
+  const yMax = dataPoints[dataPoints.length - 1].value;
+
+  // We want the y axis to start at 0
   const yMin = 0;
 
-  return xValues.map((xValue, i) => {
+  return dataPoints.map(dataPoint => {
 
     // Get a factor to scale an API datapoint's x value to
     // an x value in the SVG grid
@@ -79,7 +79,7 @@ function mapDataToSvgCoordinates(dataPoints: IMetricChartData): IMetricMappedDat
     // to be treated as 0 in the SVG grid), and multiply it by the
     // xScaleFactor value to scale the x value to an appropriate value
     // in the SVG grid
-    const mappedX = (xValue - xMin) * xScaleFactor;
+    const mappedX = (dataPoint.time - xMin) * xScaleFactor;
 
     // Same logic as with getting the xScaleFactor
     const yScaleFactor = getAxisLength(GRID_AXIS_Y) / (yMax - yMin);
@@ -88,12 +88,11 @@ function mapDataToSvgCoordinates(dataPoints: IMetricChartData): IMetricMappedDat
     // the positive Y direction goes DOWNWARD in the SVG coordinate system,
     // which means this is an inverted y value of what needs to be shown
     // in the SVG grid
-    const invertedMappedY = (dataPoints[i].value - yMin) * yScaleFactor;
+    const invertedMappedY = dataPoint.value * yScaleFactor;
 
     // Get the correct mapped Y value by subtracting the invertedYValue
     // from the max value of the SVG grid y axis
     const mappedY = GRID_AXIS_Y[1] - invertedMappedY;
-
 
     return { x: mappedX, y: mappedY };
   });
